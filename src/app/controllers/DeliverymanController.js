@@ -1,20 +1,20 @@
 import Deliveryman from '../models/Deliveryman';
-// import File from '../models/File';
+import File from '../models/File';
 
 class DeliverymanController {
   async index(req, res) {
-    const deliverymen = await Deliveryman.findAll({
+    const deliveryman = await Deliveryman.findAll({
       attributes: ['id', 'name', 'email', 'avatar_id'],
-      // include: [
-      //   {
-      //     model: File,
-      //     as: 'avatar',
-      //     attributes: ['name', 'path', 'url'],
-      //   },
-      // ],
+      include: [
+        {
+          model: File,
+          as: 'avatar',
+          attributes: ['name', 'path', 'url'],
+        },
+      ],
     });
 
-    return res.json(deliverymen);
+    return res.json(deliveryman);
   }
 
   async store(req, res) {

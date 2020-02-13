@@ -9,6 +9,8 @@ import DeliveryController from './app/controllers/DeliveryController';
 import FileController from './app/controllers/FileController';
 import SignatureController from './app/controllers/SignatureController';
 
+import ReceivedController from './app/controllers/ReceivedController';
+
 import authMiddleware from './app/middlewares/auth';
 
 const routes = Router();
@@ -36,5 +38,8 @@ routes.get('/delivery', DeliveryController.index);
 routes.post('/delivery', DeliveryController.store);
 routes.put('/delivery/:id', DeliveryController.update);
 routes.delete('/delivery/:id', DeliveryController.destroy);
+
+routes.post('/received', ReceivedController.store);
+// routes.post('/delivered', DeliveredController.store);
 
 export default routes;

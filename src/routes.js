@@ -19,6 +19,9 @@ const upload = multer(multerConfig);
 
 routes.post('/sessions', SessionController.store);
 
+routes.post('/received', ReceivedController.store);
+routes.post('/delivered', DeliveredController.store);
+
 routes.use(authMiddleware);
 
 routes.get('/recipients', RecipientController.index);
@@ -39,8 +42,5 @@ routes.get('/delivery', DeliveryController.index);
 routes.post('/delivery', DeliveryController.store);
 routes.put('/delivery/:id', DeliveryController.update);
 routes.delete('/delivery/:id', DeliveryController.destroy);
-
-routes.post('/received', ReceivedController.store);
-routes.post('/delivered', DeliveredController.store);
 
 export default routes;

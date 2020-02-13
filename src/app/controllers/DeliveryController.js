@@ -1,4 +1,9 @@
 import Delivery from '../models/Delivery';
+import Deliveryman from '../models/Deliveryman';
+import Recipient from '../models/Recipient';
+
+import NotificationMail from '../jobs/NotificationMail';
+import Queue from '../../lib/Queue';
 
 class DeliveryController {
   async index(req, res) {
@@ -18,9 +23,37 @@ class DeliveryController {
 
     const delivery = await Delivery.findByPk(id);
 
-    const result = await delivery.update(req.body);
+    await delivery.update(req.body);
 
-    return res.json(result);
+    const updated = await Delivery.findByPk(id, {
+      include: [
+        {
+          model: Deliveryman,
+          as: 'deliveryman',
+          attributes: ['name', 'email'],
+        },
+        {
+          model: Recipient,
+          as: 'recipient',
+          attributes: [
+            'street',
+            'number',
+            'complement',
+            'state',
+            'city',
+            'zip',
+          ],
+        },
+      ],
+    });
+
+    if (updated.deliveryman.name) {
+      await Queue.add(NotificationMail.key, {
+        delivery: updated,
+      });
+    }
+
+    return res.json(updated);
   }
 
   async destroy(req, res) {

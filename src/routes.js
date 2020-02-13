@@ -10,6 +10,7 @@ import FileController from './app/controllers/FileController';
 import SignatureController from './app/controllers/SignatureController';
 
 import ReceivedController from './app/controllers/ReceivedController';
+import DeliveredController from './app/controllers/DeliveredController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -40,6 +41,6 @@ routes.put('/delivery/:id', DeliveryController.update);
 routes.delete('/delivery/:id', DeliveryController.destroy);
 
 routes.post('/received', ReceivedController.store);
-// routes.post('/delivered', DeliveredController.store);
+routes.post('/delivered', DeliveredController.store);
 
 export default routes;

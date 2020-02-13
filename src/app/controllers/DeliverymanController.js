@@ -26,9 +26,9 @@ class DeliverymanController {
   async update(req, res) {
     const deliveryman = await Deliveryman.findByPk(req.params.id);
 
-    const { id, name, email } = await deliveryman.update(req.body);
+    const { id, name, email, avatar_id } = await deliveryman.update(req.body);
 
-    return res.json({ id, name, email });
+    return res.json({ id, name, email, avatar_id });
   }
 
   async destroy(req, res) {

@@ -7,9 +7,9 @@ class NotificationMail {
 
   async handle({ data }) {
     const { delivery } = data;
-    console.log(data);
+    // console.log(data);
 
-    console.log('A fila executou!');
+    // console.log('A fila executou!');
 
     await Mail.sendMail({
       to: `${delivery.deliveryman.name} <${delivery.deliveryman.email}>`,

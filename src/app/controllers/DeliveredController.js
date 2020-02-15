@@ -1,13 +1,21 @@
-import { parseISO, isToday, isAfter } from 'date-fns';
+import { parseISO, isToday, isAfter, isDate } from 'date-fns';
+
 import Delivery from '../models/Delivery';
 
 class DeliveredController {
   async store(req, res) {
-    const { delivery_id, date } = req.body;
+    const { delivery_id, end_date: date } = req.body;
 
     const delivery = await Delivery.findByPk(delivery_id);
 
     const dateDelivered = parseISO(date);
+
+    /**
+     * Check if order is received
+     */
+    if (!isDate(delivery.start_date)) {
+      return res.status(400).json({ error: 'Delivery is not received' });
+    }
 
     /**
      * Check date is today
@@ -21,6 +29,16 @@ class DeliveredController {
      */
     if (!isAfter(new Date(), dateDelivered)) {
       return res.status(400).json({ error: 'Hour delivered is after now' });
+    }
+
+    /**
+     * Check date delivered is before than received
+     */
+    const { start_date: dateReceived } = await Delivery.findByPk(delivery_id);
+    if (!isAfter(dateDelivered, dateReceived)) {
+      return res
+        .status(400)
+        .json({ error: 'Hour delivered is before than hour received' });
     }
 
     const {

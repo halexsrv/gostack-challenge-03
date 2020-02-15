@@ -6,15 +6,36 @@ import {
   setSeconds,
   isBefore,
   isAfter,
+  startOfDay,
+  endOfDay,
 } from 'date-fns';
+import { Op } from 'sequelize';
 import Delivery from '../models/Delivery';
 
 class ReceivedController {
   async store(req, res) {
-    const { delivery_id, date } = req.body;
+    const { delivery_id, start_date: date } = req.body;
 
     const delivery = await Delivery.findByPk(delivery_id);
 
+    /**
+     * Validate 5 max order for delirevyman of day
+     */
+    const searchDate = new Date();
+    const deliveries = await Delivery.findAll({
+      where: {
+        deliveryman_id: delivery.deliveryman_id,
+        start_date: {
+          [Op.between]: [startOfDay(searchDate), endOfDay(searchDate)],
+        },
+        // end_date: null,
+      },
+    });
+    if (deliveries.length >= 5) {
+      return res
+        .status(400)
+        .json({ error: 'Maximum 5 orders for a deliveryman' });
+    }
     const dateReceived = parseISO(date);
 
     /**
@@ -22,13 +43,6 @@ class ReceivedController {
      */
     if (!isToday(dateReceived)) {
       return res.status(400).json({ error: 'Date received is not today' });
-    }
-
-    /**
-     * Check if hour is after now
-     */
-    if (isAfter(new Date(), dateReceived)) {
-      return res.status(400).json({ error: 'Hour received is before now' });
     }
 
     /**

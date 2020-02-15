@@ -15,6 +15,8 @@ import DeliveredController from './app/controllers/DeliveredController';
 
 import DeliveryProblemsController from './app/controllers/DeliveryProblemsController';
 
+import DeliveryCancelController from './app/controllers/DeliveryCancelController';
+
 import authMiddleware from './app/middlewares/auth';
 
 const routes = Router();
@@ -49,5 +51,9 @@ routes.get('/delivery', DeliveryController.index);
 routes.post('/delivery', DeliveryController.store);
 routes.put('/delivery/:id', DeliveryController.update);
 routes.delete('/delivery/:id', DeliveryController.destroy);
+
+routes.get('/delivery_problems', DeliveryProblemsController.index);
+
+routes.delete('/problem/:id/cancel-delivery', DeliveryCancelController.delete);
 
 export default routes;
